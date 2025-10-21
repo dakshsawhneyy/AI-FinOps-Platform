@@ -17,3 +17,9 @@ variable "environment" {
   type = string
   default = "dev"
 }
+
+variable "kubernetes_version" {
+  description = "Kubernetes version for EKS cluster"
+  type        = string
+  default     = "1.29"
+}
