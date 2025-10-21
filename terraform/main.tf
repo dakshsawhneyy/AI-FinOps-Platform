@@ -5,8 +5,6 @@ module "vpc" {
   name = "${var.project_name}"
   cidr = "${var.vpc_cidr}"
 
-  count = terraform.workspace == "aws" ? 1 : 0
-
   azs = local.azs
   public_subnets = local.public_subnets
   private_subnets = local.private_subnets
@@ -39,20 +37,19 @@ module "eks" {
   enable_cluster_creator_admin_permissions = true
 
   # EKS Auto Mode configuration - simplified node management
-  cluster_compute_config = {
-    enabled    = true
-    node_pools = ["general-purpose"]
-  }
+  # cluster_compute_config = {
+  #   enabled    = true
+  #   node_pools = ["general-purpose"]
+  # }
 
-#   eks_managed_node_groups = {
-#     general = {
-#       instance_types = ["t2.micro"]
-#       min_size       = 1
-#       max_size       = 3
-#       desired_size   = 2
-#       vpc_security_group_ids = [aws_security_group.web_sg.id]
-#     }
-#   }
+  eks_managed_node_groups = {
+    general = {
+      instance_types = ["t3.small"]
+      min_size       = 1
+      max_size       = 3
+      desired_size   = 2
+    }
+  }
 
   # Network configuration
   vpc_id     = module.vpc.vpc_id

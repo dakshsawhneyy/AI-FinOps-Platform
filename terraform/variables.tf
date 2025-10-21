@@ -23,3 +23,8 @@ variable "kubernetes_version" {
   type        = string
   default     = "1.29"
 }
+
+variable "aws_region" {
+  type = string
+  default = "ap-south-1"
+}
