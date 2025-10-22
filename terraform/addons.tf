@@ -37,3 +37,14 @@ resource "helm_release" "opencost" {
     value = "http://${helm_release.prometheus.name}-kube-prometheus-prometheus.${helm_release.prometheus.namespace}.svc.cluster.local:9090"
   }]
 }
+
+# Install Strimzi (Kubernetes Operator)
+resource "helm_release" "strimzi" {
+  depends_on = [ module.eks ]
+
+  name = "strimzi-kafka-operator"
+  repository = "https://strimzi.io/charts/"
+  chart      = "strimzi-kafka-operator"
+  namespace  = "kafka" # Or your desired namespace for Strimzi
+  create_namespace = true
+}
