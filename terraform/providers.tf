@@ -22,10 +22,12 @@ provider "aws" {
 }
 
 data "aws_eks_cluster" "eks" {
+  depends_on = [ module.eks ]
   name = module.eks.cluster_name
 }
 
 data "aws_eks_cluster_auth" "eks" {
+  depends_on = [ module.eks ]
   name = module.eks.cluster_name
 }
 
