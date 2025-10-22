@@ -1,6 +1,7 @@
 # Install Prometheus + Grafana
 resource "helm_release" "prometheus" {
   depends_on = [module.eks]
+  provider = helm.eks_cluster
 
   name       = "kube-prometheus-stack"
   repository = "https://prometheus-community.github.io/helm-charts"
@@ -18,6 +19,7 @@ resource "helm_release" "prometheus" {
 # Install OpenCost
 resource "helm_release" "opencost" {
   depends_on = [helm_release.prometheus] # Wait for Prometheus to be ready
+  provider = helm.eks_cluster
 
   name       = "opencost"
   repository = "https://opencost.github.io/opencost-helm-chart"
@@ -27,11 +29,11 @@ resource "helm_release" "opencost" {
 
   set = [{
     name  = "opencost.prometheus.internal.enabled"
-    value = "false"
+    value = "true"
   },
   {
     # This tells OpenCost where to find the Prometheus we just installed
-    name  = "opencost.prometheus.internal.server"
+    name  = "opencost.prometheus.external.url"
     value = "http://${helm_release.prometheus.name}-kube-prometheus-prometheus.${helm_release.prometheus.namespace}.svc.cluster.local:9090"
   }]
 }
