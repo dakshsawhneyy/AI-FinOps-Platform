@@ -1,3 +1,4 @@
+# Kafka Cluster
 resource "kubernetes_manifest" "kafka_cluster" {
   provider = kubernetes.eks_cluster
   depends_on = [ helm_release.strimzi ]
@@ -32,6 +33,28 @@ resource "kubernetes_manifest" "kafka_cluster" {
                 "deleteClaim"=  true
             }
         }
+    }
+  }
+}
+
+# Kafka Topic
+resource "kubernetes_manifest" "kafka-topic" {
+  provider = kubernetes.eks_cluster
+  depends_on = [ helm_release.strimzi ]
+
+  manifest = {
+    "kind": "KafkaTopic"
+    "apiVersion": "kafka.strimzi.io/v1beta2"
+    "metadata" = {
+        "name"= "ai-costs"
+        "namespace"= "kafka"
+        "labels" = {
+            "strimzi.io/cluster" = "my-kafka-cluster"
+        }
+    }
+    "spec" = {
+        "partitions" = 3
+        "replicas"   = 3  #  This means our topic's data will be copied to all 3 Kafka brokers. If one broker dies, no data is lost.
     }
   }
 }
