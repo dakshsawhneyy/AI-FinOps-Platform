@@ -38,7 +38,7 @@ resource "kubernetes_manifest" "kafka_cluster" {
 }
 
 # Kafka Topic
-resource "kubernetes_manifest" "kafka-topic" {
+resource "kubernetes_manifest" "kafka-topic-aicosts" {
   provider = kubernetes.eks_cluster
   depends_on = [ helm_release.strimzi ]
 

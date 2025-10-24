@@ -34,7 +34,7 @@ data "aws_eks_cluster_auth" "eks" {
 provider "kubernetes" {
   alias = "eks_cluster"   # dummy provider so Terraform doesn't fail at plan time because eks cluster hasn't built yet
   host                   = data.aws_eks_cluster.eks.endpoint
-  cluster_ca_certificate = base64decode(data.aws_eks_cluster.cluster_certificate_authority[0].data)
+  cluster_ca_certificate = base64decode(data.aws_eks_cluster.eks.certificate_authority[0].data)
   token                   = data.aws_eks_cluster_auth.eks.token
 }
 
