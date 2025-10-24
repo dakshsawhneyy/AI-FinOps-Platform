@@ -23,27 +23,25 @@ resource "kubernetes_manifest" "cost_producer" {
                 }
             }
             "spec" = {
+                # Specifying config map's script
+                "volumes" = [{
+                    "name": "script-volume"
+                    "configMap" = {
+                        "name" = kubernetes_config_map_v1.producer_script.metadata[0].name
+                        "defaultMode" = 493
+                    }
+                }]
                 "containers" = [{
                     "name" = "cost-producer"
                     "image" = "bitnami/kafka:3.6"
-                    "command" = [
-                        "/bin/sh",
-                        "-c",
-                    ]
-
-                    "args" = [
-                        # "while true; do " + 
-                        # "JSON_MSG={\"event_id\": \"evt_gpu_$(($RANDOM % 1000))\", \"timestamp\": \"$(date +\"%Y-%m-%dT%H:%M:%S\")\", \"source\": \"gpu_job\", \"cost\": $(($RANDOM % 5 + 1)).$(($RANDOM % 99)), \"details\": {\"team\": \"ml-team\", \"duration_seconds\": 180}}; " +
-                        # "echo $JSON_MSG | " +
-                        # "/opt/bitnami/kafka/bin/kafka-console-producer.sh " +
-                        # "--broker-list my-kafka-cluster-kafka-brokers.kafka.svc.cluster.local:9092 " +
-                        # "--topic ai-costs; " +
-                        # "sleep 10; " +
-                        # "done"
-
-                        # Need to write all this in a single line
-                        "while true; do JSON_MSG={\"event_id\": \"evt_gpu_$(($RANDOM % 1000))\", \"timestamp\": \"$(date -u +%Y-%m-%dT%H:%M:%SZ)\", \"source\": \"gpu_job\", \"cost\": $(($RANDOM % 5 + 1)).$(($RANDOM % 99)), \"details\": {\"team\": \"ml-team\", \"duration_seconds\": 180}}; echo $JSON_MSG | /opt/bitnami/kafka/bin/kafka-console-producer.sh --broker-list my-kafka-cluster-kafka-brokers.kafka.svc.cluster.local:9092 --topic ai-costs; sleep 10; done"
-                    ]
+                    # Mount the volume into the container
+                    "volumeMounts" = [{
+                        "name" = "script-volume"
+                        "mountPath" = "/app"
+                        "readOnly" = true
+                    }]
+                    "command" = ["/app/kafka-producer.sh"]
+                    "args" = []
                 }]
                 "restartPolicy" = "Always"
             }
