@@ -19,8 +19,15 @@ resource "kubernetes_manifest" "kafka_cluster" {
     }
     "spec" = {
         "kafka" = {
-            "version" = "3.6.1 "
+            "version" = "4.0.0"
             "replicas" = 3   # 3 Worker Pods for kafka
+            # we didn't specified how producer consumer connect to kafka broker -- listeners does this task
+            "listeners" = [{
+                "name" = "plain" # Give the listener a name
+                "port" = 9092     # Standard Kafka port
+                "type" = "internal" # Only accessible within the Kubernetes cluster
+                "tls"  = false    # Disable TLS encryption for this internal listener
+            }]
             "storage" = {
                 "type" = "jbod"   # Just a Bunch of Disks.
                 "volumes" = [{
