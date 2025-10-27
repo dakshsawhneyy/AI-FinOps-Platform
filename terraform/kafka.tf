@@ -1,7 +1,14 @@
+# Wait for helm to install strimzi chart, and then start creating CRD resources
+resource "time_sleep" "wait_for_strimzi_crds" {
+  depends_on = [ helm_release.strimzi ]
+
+  create_duration = "30s"
+}
+
 # Kafka Cluster
 resource "kubernetes_manifest" "kafka_cluster" {
-  provider = kubernetes.eks_cluster
-  depends_on = [ helm_release.strimzi ]
+  # provider = kubernetes.eks_cluster
+  depends_on = [ time_sleep.wait_for_strimzi_crds ]
 
   manifest = {
     "apiVersion" = "kafka.strimzi.io/v1beta2"
@@ -39,8 +46,8 @@ resource "kubernetes_manifest" "kafka_cluster" {
 
 # Kafka Topic
 resource "kubernetes_manifest" "kafka-topic-aicosts" {
-  provider = kubernetes.eks_cluster
-  depends_on = [ helm_release.strimzi ]
+  # provider = kubernetes.eks_cluster
+  depends_on = [ time_sleep.wait_for_strimzi_crds ]
 
   manifest = {
     "kind": "KafkaTopic"

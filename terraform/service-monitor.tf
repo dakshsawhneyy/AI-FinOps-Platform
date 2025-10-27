@@ -1,5 +1,5 @@
 resource "kubernetes_manifest" "kafka-consumer-servicemonitor" {
-  provider = kubernetes.eks_cluster
+  # provider = kubernetes.eks_cluster
   depends_on = [ kubernetes_manifest.kafka-consumer-service ]
 
   manifest = {
