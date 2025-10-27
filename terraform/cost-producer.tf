@@ -33,7 +33,7 @@ resource "kubernetes_manifest" "cost_producer" {
                 }]
                 "containers" = [{
                     "name" = "cost-producer"
-                    "image" = "bitnami/kafka:3.7"
+                    "image" = "apache/kafka:latest"
                     # Mount the volume into the container
                     "volumeMounts" = [{
                         "name" = "script-volume"

@@ -1,6 +1,10 @@
 from kafka import KafkaConsumer
 import json
 from prometheus_client import start_http_server, Counter
+import logging
+
+# Setup logging
+logging.basicConfig(level=logging.INFO, format='%(asctime)s [%(levelname)s] %(message)s')
 
 # Custom Prometheus Counters
 c = Counter('ai_finops_cost_dollars_total', 'Total accumulated AI cost in USD', ['team', 'project', 'source'])
@@ -11,6 +15,7 @@ consumer = KafkaConsumer('ai-costs', group_id='ai-costs', bootstrap_servers='my-
 if __name__ == '__main__':
     # Start Prometheus Server
     start_http_server(8000)
+    logging.info('Prometheus Server started on port 8000')
     print('Prometheus Server started on port 8000')
     
     for msg in consumer:
@@ -28,5 +33,7 @@ if __name__ == '__main__':
             c.labels(team=team, project=project, source=source).inc(float(cost))
             
             print(f"Processed message: Cost={cost} Project={project} Team={team}")
+            logging.info(f"Processed message: Cost={cost}, Project={project}, Team={team}, Source={source}")
         except json.JSONDecodeError as e:
             print(f'JSON Decode Error: {e}')
+            logging.error(f'Error processing message: {e}')
