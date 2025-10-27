@@ -1,5 +1,5 @@
 resource "kubernetes_manifest" "cost_producer" {
-  provider = kubernetes.eks_cluster
+  # provider = kubernetes.eks_cluster
   depends_on = [ kubernetes_manifest.kafka-topic-aicosts ]
 
   manifest = {

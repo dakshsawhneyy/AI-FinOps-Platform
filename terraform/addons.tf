@@ -1,7 +1,7 @@
 # Install Prometheus + Grafana
 resource "helm_release" "prometheus" {
   depends_on = [module.eks]
-  provider = helm.eks_cluster
+  # provider = helm.eks_cluster
 
   name       = "kube-prometheus-stack"
   repository = "https://prometheus-community.github.io/helm-charts"
@@ -16,28 +16,6 @@ resource "helm_release" "prometheus" {
   }]
 }
 
-# Install OpenCost
-resource "helm_release" "opencost" {
-  depends_on = [helm_release.prometheus] # Wait for Prometheus to be ready
-  provider = helm.eks_cluster
-
-  name       = "opencost"
-  repository = "https://opencost.github.io/opencost-helm-chart"
-  chart      = "opencost"
-  namespace  = "monitoring" # Install it in the same namespace
-  create_namespace = false    # Already Created
-
-  set = [{
-    name  = "opencost.prometheus.internal.enabled"
-    value = "true"
-  },
-  {
-    # This tells OpenCost where to find the Prometheus we just installed
-    name  = "opencost.prometheus.external.url"
-    value = "http://${helm_release.prometheus.name}-kube-prometheus-prometheus.${helm_release.prometheus.namespace}.svc.cluster.local:9090"
-  }]
-}
-
 # Install Strimzi (Kubernetes Operator)
 resource "helm_release" "strimzi" {
   depends_on = [ module.eks ]
@@ -47,4 +25,29 @@ resource "helm_release" "strimzi" {
   chart      = "strimzi-kafka-operator"
   namespace  = "kafka" # Or your desired namespace for Strimzi
   create_namespace = true
+}
+
+# Install OpenCost
+resource "helm_release" "opencost" {
+  depends_on = [helm_release.prometheus] # Wait for Prometheus to be ready
+  # provider = helm.eks_cluster
+
+  name       = "opencost"
+  repository = "https://opencost.github.io/opencost-helm-chart"
+  chart      = "opencost"
+  namespace  = "monitoring" # Install it in the same namespace
+  create_namespace = false    # Already Created
+
+  set = [{
+    name  = "opencost.prometheus.external.enabled"
+    value = "true"
+  },
+  {
+    # This tells OpenCost where to find the Prometheus we just installed
+    name  = "opencost.prometheus.external.url"
+    value = "http://${helm_release.prometheus.name}-kube-prometheus-prometheus.${helm_release.prometheus.namespace}.svc.cluster.local:9090"
+  },{
+    name  = "opencost.prometheus.internal.enabled"
+    value = "false"
+  }]
 }
