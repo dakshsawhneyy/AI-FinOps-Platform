@@ -1,0 +1,23 @@
+apiVersion: kafka.strimzi.io/v1beta2
+kind: Kafka
+metadata:
+  name: my-kafka-cluster
+  namespace: kafka
+spec:
+  kafka:
+    version: 3.6.1 
+    replicas: 3   # 3 Worker Pods for kafka
+    storage:
+      type: "jbod"   # Just a Bunch of Disks.
+      volumes:
+        - id: 0
+          type: persistent-claim    # Go ask aws for 20GB Persistent Volume (EBS)
+          size: 20Gi
+          deleteClaim: true   # If i delete this kafka cluster, delete ebs as well
+  # ZooKeeper manages kafka's worker nodes
+  zookeeper: 
+    replicas: 3
+    storage:
+      type: "persistent-claim"
+      size: "10Gi" # 10GB disk for each zookeeper
+      deleteClaim:  true

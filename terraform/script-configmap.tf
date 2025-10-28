@@ -1,5 +1,6 @@
 resource "kubernetes_config_map_v1" "producer_script" {
-  # provider = kubernetes.eks_cluster
+  provider = kubernetes.eks_cluster
+  depends_on = [ module.eks.cluster_id ]
 
   metadata {
     name = "producer-script"

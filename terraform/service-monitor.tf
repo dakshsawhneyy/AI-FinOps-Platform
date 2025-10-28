@@ -1,6 +1,6 @@
 resource "kubernetes_manifest" "kafka-consumer-servicemonitor" {
-  # provider = kubernetes.eks_cluster
-  depends_on = [ kubernetes_manifest.kafka-consumer-service ]
+  provider = kubernetes.eks_cluster
+  depends_on = [ helm_release.strimzi, module.eks.cluster_name ]
 
   manifest = {
     "apiVersion" = "monitoring.coreos.com/v1"
@@ -14,9 +14,9 @@ resource "kubernetes_manifest" "kafka-consumer-servicemonitor" {
     }
     "spec" = {
         "selector" = {
-            "matchLabels" = {
-                "app" = "kafka-consumer"
-            }
+          "matchLabels" = {
+            "app" = "kafka-consumer"
+          }
         }
         # Which namespace(s) to look for the Service in
         "namespaceSelector" = {
