@@ -1,0 +1,21 @@
+apiVersion: kafka.strimzi.io/v1beta2
+kind: KafkaTopic
+metadata:
+  name: ai-costs
+  namespace: kafka
+  labels:
+    strimzi.io/cluster: finops-cluster
+spec:
+  partitions: 3
+  replicas: 3
+# ---
+# apiVersion: kafka.strimzi.io/v1beta2
+# kind: KafkaTopic
+# metadata:
+#   name: cost-anomalies
+#   namespace: kafka
+#   labels:
+#     strimzi.io/cluster: finops-cluster
+# spec:
+#   partitions: 3
+#   replicas: 3
