@@ -22,32 +22,40 @@ provider "aws" {
 }
 
 # data "aws_eks_cluster" "eks" {
-#   depends_on = [ module.eks ]
+#   depends_on = [ module.eks.cluster_id ]
 #   name = module.eks.cluster_name
 # }
 
 # data "aws_eks_cluster_auth" "eks" {
-#   depends_on = [ module.eks ]
+#   depends_on = [ module.eks.cluster_id ]
 #   name = module.eks.cluster_name
 # }
 
 provider "kubernetes" {
-  # alias = "eks_cluster"   # dummy provider so Terraform doesn't fail at plan time because eks cluster hasn't built yet
-  # host                   = data.aws_eks_cluster.eks.endpoint
-  # cluster_ca_certificate = base64decode(data.aws_eks_cluster.eks.certificate_authority[0].data)
-  # token                   = data.aws_eks_cluster_auth.eks.token
+  alias = "eks_cluster"   # dummy provider so Terraform doesn't fail at plan time because eks cluster hasn't built yet
+  host                   = module.eks.cluster_endpoint
+  cluster_ca_certificate = base64decode(module.eks.cluster_certificate_authority_data)
+  exec {
+    api_version = "client.authentication.k8s.io/v1beta1"
+    args        = ["eks", "get-token", "--cluster-name", module.eks.cluster_name]
+    command     = "aws"
+  }
   
   # Explicitely mentioning path
-  config_path = "~/.kube/config" # Explicit path
+  # config_path = "~/.kube/config" # Explicit path
 }
 
 provider "helm" {
-  # alias = "eks_cluster"
+  alias = "eks_cluster"
   kubernetes = {
-    # host                   = data.aws_eks_cluster.eks.endpoint
-    # cluster_ca_certificate = base64decode(data.aws_eks_cluster.eks.certificate_authority[0].data)
-    # token                  = data.aws_eks_cluster_auth.eks.token
+    host                   = module.eks.cluster_endpoint
+    cluster_ca_certificate = base64decode(module.eks.cluster_certificate_authority_data)
+    exec = {
+      api_version = "client.authentication.k8s.io/v1beta1"
+      args        = ["eks", "get-token", "--cluster-name", module.eks.cluster_name]
+      command     = "aws"
+    }
 
-    config_path = "~/.kube/config" # Explicit path
+    # config_path = "~/.kube/config" # Explicit path
   }
 }
