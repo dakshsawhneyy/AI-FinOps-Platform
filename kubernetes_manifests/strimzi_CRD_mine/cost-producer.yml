@@ -1,0 +1,25 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: cost-producer
+  namespace: kafka
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: cost-producer
+  template:
+    metadata:
+      labels:
+        app: cost-producer
+    spec:
+      containers:
+      - name: cost-producer
+        image: "bitnami/kafka:3.6"
+        resources:
+          limits:
+            memory: "128Mi"
+            cpu: "500m"
+          requests:
+            memory: "64Mi"
+            cpu: "200m"
