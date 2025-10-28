@@ -1,6 +1,7 @@
 # Pod for kafka-consumer
 resource "kubernetes_manifest" "kafka-consumer" {
-    # provider = kubernetes.eks_cluster
+    provider = kubernetes.eks_cluster
+    depends_on = [module.eks.cluster_id]
     # depends_on = [ kubernetes_manifest.kafka_cluster, kubernetes_manifest.kafka-topic-aicosts ]
     
     manifest = {
@@ -41,7 +42,8 @@ resource "kubernetes_manifest" "kafka-consumer" {
 
 # Service for Kafka-Consumer
 resource "kubernetes_manifest" "kafka-consumer-service" {
-    # provider = kubernetes.eks_cluster
+    provider = kubernetes.eks_cluster
+    depends_on = [module.eks.cluster_id]
     # depends_on = [ kubernetes_manifest.kafka-consumer ]
 
     manifest = {

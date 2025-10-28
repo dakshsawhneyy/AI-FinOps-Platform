@@ -1,5 +1,6 @@
 resource "kubernetes_manifest" "cost_producer" {
-  # provider = kubernetes.eks_cluster
+  provider = kubernetes.eks_cluster
+  depends_on = [module.eks.cluster_id]
   # depends_on = [ kubernetes_manifest.kafka-topic-aicosts, kubernetes_config_map_v1.producer_script ]
 
   manifest = {

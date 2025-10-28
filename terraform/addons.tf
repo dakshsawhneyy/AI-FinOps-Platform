@@ -1,7 +1,7 @@
 # Install Prometheus + Grafana
 resource "helm_release" "prometheus" {
-  depends_on = [module.eks]
-  # provider = helm.eks_cluster
+  depends_on = [module.eks.cluster_id]
+  provider = helm.eks_cluster
 
   name       = "kube-prometheus-stack"
   repository = "https://prometheus-community.github.io/helm-charts"
@@ -18,7 +18,8 @@ resource "helm_release" "prometheus" {
 
 # Install Strimzi (Kubernetes Operator)
 resource "helm_release" "strimzi" {
-  depends_on = [ module.eks ]
+  depends_on = [ module.eks.cluster_id ]
+  provider = helm.eks_cluster
 
   name = "strimzi-kafka-operator"
   repository = "https://strimzi.io/charts/"
@@ -30,7 +31,7 @@ resource "helm_release" "strimzi" {
 # Install OpenCost
 resource "helm_release" "opencost" {
   depends_on = [helm_release.prometheus] # Wait for Prometheus to be ready
-  # provider = helm.eks_cluster
+  provider = helm.eks_cluster
 
   name       = "opencost"
   repository = "https://opencost.github.io/opencost-helm-chart"
