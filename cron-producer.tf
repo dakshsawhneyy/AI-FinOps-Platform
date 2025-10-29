@@ -44,4 +44,3 @@ resource "kubernetes_manifest" "cost_producer" {
     }
   }
 }
-
