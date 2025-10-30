@@ -16,4 +16,4 @@
 -> Kafka-Consumer incrememnt counts and expose metrics to /metrics
 
 ### Phase 5:
--> Added service-discovery so that prometheus can know, from which service fetching metrics from
+-> Added service-discovery so that prometheus can know, from which service fetching metrics 
