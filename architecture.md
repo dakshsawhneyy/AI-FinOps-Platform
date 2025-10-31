@@ -13,7 +13,7 @@
 ### Phase 4:
 -> Creation of Kafka-Topic
 -> Creation of Kafka-Consumer Pod and Service
--> Kafka-Consumer incrememnt counts and expose metrics to /metrics
+-> Kafka-Consumer increment counts and expose metrics to /metrics
 
 ### Phase 5:
 -> Added service-discovery so that prometheus can know, from which service fetching metrics 
