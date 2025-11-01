@@ -4,7 +4,7 @@ This project implements a real-time, event-driven **FinOps platform** on **AWS E
 
 ---
 
-## 🚀 The Need for Real-Time AI FinOps
+## The Need for Real-Time AI FinOps
 
 Traditional cloud billing dashboards are often updated only once every few hours or once a day. This is sufficient for predictable web server costs but fails to address the unique challenges of AI/ML workloads:
 
@@ -21,7 +21,7 @@ This platform solves this by ingesting custom cost events in **real-time**, proc
 
 ---
 
-## 🧩 Architecture and Data Flow
+## Architecture and Data Flow
 
 This platform is built on a **cloud-native**, **event-driven** architecture running entirely on **Kubernetes**.
 
@@ -54,7 +54,7 @@ This platform is built on a **cloud-native**, **event-driven** architecture runn
 
 ---
 
-## 🧠 Technologies Used
+## Technologies Used
 
 | Category | Technology |
 |-----------|-------------|
@@ -70,11 +70,11 @@ This platform is built on a **cloud-native**, **event-driven** architecture runn
 
 ---
 
-## ⚙️ Project Deployment (Bootstrapping from Scratch)
+## Project Deployment (Bootstrapping from Scratch)
 
 This project is fully automated using **Terraform** and requires a two-step apply process to handle the dynamic provider configuration for Kubernetes.
 
-### **Prerequisites**
+### Prerequisites
 * Terraform CLI  
 * AWS CLI (configured with credentials)  
 * `kubectl`  
@@ -82,7 +82,8 @@ This project is fully automated using **Terraform** and requires a two-step appl
 
 ---
 
-### **Step 1: Build Infrastructure**
+### Step 1: Build Infrastructure
+
 Run the initial apply, targeting *only* the EKS module.  
 This builds the VPC and EKS cluster itself.
 
