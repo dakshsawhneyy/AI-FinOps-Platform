@@ -46,7 +46,7 @@ resource "helm_release" "opencost" {
   {
     # This tells OpenCost where to find the Prometheus we just installed
     name  = "opencost.prometheus.external.url"
-    value = "http://${helm_release.prometheus.name}-kube-prometheus-prometheus.${helm_release.prometheus.namespace}.svc.cluster.local:9090"
+    value = "http://${helm_release.prometheus.name}-prometheus.${helm_release.prometheus.namespace}.svc.cluster.local:9090"
   },{
     name  = "opencost.prometheus.internal.enabled"
     value = "false"
