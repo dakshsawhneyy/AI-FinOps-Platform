@@ -26,6 +26,14 @@ resource "helm_release" "strimzi" {
   chart      = "strimzi-kafka-operator"
   namespace  = "kafka" # Or your desired namespace for Strimzi
   create_namespace = true
+
+  version = "0.36.0"    # modern Strimzi operator version (0.28.0+ for KRaft)
+
+  # Also enable critical feature gates (KRaft and KafkaNodePools)
+  set = [ {
+    name = "clusterOperator.featureGates"
+    value = "{UseKRaft,KafkaNodePools}"
+  } ]
 }
 
 # Install OpenCost
