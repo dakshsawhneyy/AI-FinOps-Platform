@@ -1,0 +1,41 @@
+apiVersion: kafka.strimzi.io/v1beta2
+kind: Kafka
+metadata:
+  name: finops-cluster
+  namespace: kafka
+  # KRaft mode for v1beta2 is enabled via this annotation
+  annotations:
+    strimzi.io/kraft: "enabled"
+spec:
+  kafka:
+    version: 3.5.0
+    replicas: 3
+    listeners:
+      - name: plain
+        port: 9092
+        type: internal
+        tls: false
+      - name: controller
+        port: 9093
+        type: internal
+        tls: false
+    config:
+      offsets.topic.replication.factor: 3
+      transaction.state.log.replication.factor: 3
+      transaction.state.log.min.isr: 2
+      default.replication.factor: 3
+      min.insync.replicas: 2
+    storage:
+      type: persistent-claim
+      size: 20Gi
+      deleteClaim: true
+  # entityOperator is a top-level field under 'spec' (sibling to 'kafka')
+  entityOperator:
+    topicOperator: {}
+    userOperator: {}
+  
+  # COMPLETE Zookeeper config required by v1beta2 schema validation
+  zookeeper:
+    replicas: 3 # Required value for validation
+    storage:
+      type: ephemeral # Use ephemeral storage, as ZK won't be used with KRaft annotation

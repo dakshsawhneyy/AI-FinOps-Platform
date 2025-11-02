@@ -26,6 +26,14 @@ resource "helm_release" "strimzi" {
   chart      = "strimzi-kafka-operator"
   namespace  = "kafka" # Or your desired namespace for Strimzi
   create_namespace = true
+
+  version = "0.36.0"    # modern Strimzi operator version (0.28.0+ for KRaft)
+
+  # Also enable critical feature gates (KRaft and KafkaNodePools)
+  set = [ {
+    name = "clusterOperator.featureGates"
+    value = "{UseKRaft,KafkaNodePools}"
+  } ]
 }
 
 # Install OpenCost
@@ -46,7 +54,7 @@ resource "helm_release" "opencost" {
   {
     # This tells OpenCost where to find the Prometheus we just installed
     name  = "opencost.prometheus.external.url"
-    value = "http://${helm_release.prometheus.name}-kube-prometheus-prometheus.${helm_release.prometheus.namespace}.svc.cluster.local:9090"
+    value = "http://${helm_release.prometheus.name}-prometheus.${helm_release.prometheus.namespace}.svc.cluster.local:9090"
   },{
     name  = "opencost.prometheus.internal.enabled"
     value = "false"
