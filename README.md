@@ -33,6 +33,7 @@ This platform is built on a **cloud-native**, **event-driven** architecture runn
    The producer sends these JSON messages to an `ai-costs` topic within an **Apache Kafka** cluster.  
    The Kafka cluster is stateful, highly available (3 nodes), and runs in **KRaft (Zookeeper-less)** mode.  
    It acts as a resilient, persistent buffer that can absorb massive spikes in cost events without data loss.
+<img width="832" height="347" alt="image" src="https://github.com/user-attachments/assets/c393f8c8-b59a-4fb9-b8f5-95b61d354c25" />
 
 3. **Processing (Python Consumer):**  
    A separate `Deployment` runs a custom Python application (`consumer.py`).  
@@ -43,14 +44,16 @@ This platform is built on a **cloud-native**, **event-driven** architecture runn
    It creates a `Counter` named `ai_finops_cost_dollars_total` and attaches labels (e.g., `team`, `project`, `source`) extracted from the message.  
    This metric data is exposed via an HTTP server on a `/metrics` endpoint.
 
-5. **Scraping (Prometheus Operator):**  
+5. **Scraping 
    A `ServiceMonitor` resource is deployed, which declaratively tells the Prometheus Operator to find the consumer’s `Service` (via its labels)  
    and automatically configure Prometheus to scrape the `/metrics` endpoint every 15 seconds.
+<img width="1905" height="855" alt="image" src="https://github.com/user-attachments/assets/5fdc31f9-c279-4cf8-8f0e-3ed1bf8ef7ee" />
 
 6. **Visualization (Grafana):**  
    Grafana is configured with Prometheus as a data source.  
    It can now query *both* the standard `opencost_*` metrics and our new custom `ai_finops_cost_dollars_total` metric,  
    allowing for a single, unified dashboard showing total cluster cost *plus* our granular, real-time AI costs.
+<img width="1672" height="816" alt="image" src="https://github.com/user-attachments/assets/4c551a45-5f20-4a5e-8273-0872cc0a9bfd" />
 
 ---
 
