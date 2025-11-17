@@ -140,4 +140,4 @@ Used a ServiceMonitor to allow Prometheus to automatically discover and scrape t
 * Custom Prometheus Metrics:
 Implemented a Python application to export custom, labeled metrics from an external data source (Kafka).
 * GitOps Principles:
-Maintained a single source of truth for all infrastructure and application configuration in a Git-trackable format.
+Maintained a single source of truth for all infra and application configuration in a Git-trackable format.
